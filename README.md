@@ -62,29 +62,6 @@ IrrigationValveType (ObjectType)
     └── CommandStop (Boolean, Writable)
 ```
 
-## 📁 Struttura del Progetto
-
-```
-opcua-irrigation-system/
-├── server/
-│   ├── irrigation_server.py            # Server OPC-UA professionale con ObjectTypes
-│   └── professional_irrigation_server.py # Alias per chiarezza
-├── client/
-│   ├── monitor_client.py               # Monitor client professionale
-│   ├── control_client.py               # Control client professionale
-│   ├── professional_monitor_client.py  # Alias per chiarezza
-│   └── professional_control_client.py  # Alias per chiarezza
-├── config/
-│   └── server_config.py                # Configurazioni server
-├── docs/
-│   └── addressspace_design.md          # Documentazione AddressSpace professionale
-├── export/
-│   ├── irrigation_professional_nodeset.xml # NodeSet esportato per UAModeler
-│   └── irrigation_nodeset.xml              # NodeSet base (legacy)
-├── requirements.txt                     # Dipendenze Python
-└── README.md                           # Questo file
-```
-
 ## 🚀 Installazione e Setup
 
 ### 1. Installa le dipendenze
