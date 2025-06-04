@@ -5,386 +5,730 @@
   </NamespaceUris>
   <Aliases>
     <Alias Alias="Boolean">i=1</Alias>
-    <Alias Alias="Int64">i=8</Alias>
+    <Alias Alias="Int32">i=6</Alias>
     <Alias Alias="String">i=12</Alias>
+    <Alias Alias="DateTime">i=13</Alias>
     <Alias Alias="Organizes">i=35</Alias>
     <Alias Alias="HasTypeDefinition">i=40</Alias>
+    <Alias Alias="HasSubtype">i=45</Alias>
     <Alias Alias="HasComponent">i=47</Alias>
   </Aliases>
-  <UAObject NodeId="ns=1;i=1" BrowseName="1:IrrigationSystem" ParentNodeId="i=85">
+  <UAObjectType NodeId="ns=1;i=1" BrowseName="1:IrrigationValveType">
+    <DisplayName>IrrigationValveType</DisplayName>
+    <Description>IrrigationValveType</Description>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=2</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=7</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=11</Reference>
+    </References>
+  </UAObjectType>
+  <UAObjectType NodeId="ns=1;i=12" BrowseName="1:IrrigationStationType">
+    <DisplayName>IrrigationStationType</DisplayName>
+    <Description>IrrigationStationType</Description>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=13</Reference>
+    </References>
+  </UAObjectType>
+  <UAObjectType NodeId="ns=1;i=18" BrowseName="1:IrrigationSystemType">
+    <DisplayName>IrrigationSystemType</DisplayName>
+    <Description>IrrigationSystemType</Description>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=19</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=21</Reference>
+    </References>
+  </UAObjectType>
+  <UAObject NodeId="ns=1;i=22" BrowseName="1:IrrigationSystem" ParentNodeId="i=85">
     <DisplayName>IrrigationSystem</DisplayName>
-    <Description>IrrigationSystem</Description>
+    <Description>IrrigationSystemType</Description>
     <References>
       <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=2</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=3</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=11</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=19</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=27</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=35</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=18</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=23</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=25</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=1;i=2" BrowseName="1:SystemState" ParentNodeId="ns=1;i=1" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
+  <UAObject NodeId="ns=1;i=23" BrowseName="1:Controller" ParentNodeId="ns=1;i=22">
+    <DisplayName>Controller</DisplayName>
+    <Description>Controller</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=22</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=24</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=24" BrowseName="1:SystemState" ParentNodeId="ns=1;i=23" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
     <DisplayName>SystemState</DisplayName>
     <Description>SystemState</Description>
     <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=23</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
     </References>
   </UAVariable>
-  <UAObject NodeId="ns=1;i=3" BrowseName="1:Station1_Valve1" ParentNodeId="ns=1;i=1">
-    <DisplayName>Station1_Valve1</DisplayName>
-    <Description>Station1_Valve1</Description>
+  <UAObject NodeId="ns=1;i=25" BrowseName="1:Stations" ParentNodeId="ns=1;i=22">
+    <DisplayName>Stations</DisplayName>
+    <Description>Stations</Description>
     <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=22</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=4</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=5</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=6</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=7</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=8</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=9</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=10</Reference>
-    </References>
-  </UAObject>
-  <UAVariable NodeId="ns=1;i=4" BrowseName="1:Description" ParentNodeId="ns=1;i=3" DataType="String">
-    <DisplayName>Description</DisplayName>
-    <Description>Description</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=3</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=5" BrowseName="1:IsIrrigating" ParentNodeId="ns=1;i=3" DataType="Boolean">
-    <DisplayName>IsIrrigating</DisplayName>
-    <Description>IsIrrigating</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=3</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=6" BrowseName="1:Mode" ParentNodeId="ns=1;i=3" DataType="String">
-    <DisplayName>Mode</DisplayName>
-    <Description>Mode</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=3</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=7" BrowseName="1:RemainingTime" ParentNodeId="ns=1;i=3" DataType="Int64">
-    <DisplayName>RemainingTime</DisplayName>
-    <Description>RemainingTime</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=3</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=8" BrowseName="1:CommandDuration" ParentNodeId="ns=1;i=3" DataType="Int64" AccessLevel="3" UserAccessLevel="3">
-    <DisplayName>CommandDuration</DisplayName>
-    <Description>CommandDuration</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=3</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=9" BrowseName="1:CommandStart" ParentNodeId="ns=1;i=3" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
-    <DisplayName>CommandStart</DisplayName>
-    <Description>CommandStart</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=3</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=10" BrowseName="1:CommandStop" ParentNodeId="ns=1;i=3" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
-    <DisplayName>CommandStop</DisplayName>
-    <Description>CommandStop</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=3</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAObject NodeId="ns=1;i=11" BrowseName="1:Station1_Valve2" ParentNodeId="ns=1;i=1">
-    <DisplayName>Station1_Valve2</DisplayName>
-    <Description>Station1_Valve2</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=12</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=13</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=14</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=15</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=16</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=17</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=18</Reference>
-    </References>
-  </UAObject>
-  <UAVariable NodeId="ns=1;i=12" BrowseName="1:Description" ParentNodeId="ns=1;i=11" DataType="String">
-    <DisplayName>Description</DisplayName>
-    <Description>Description</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=11</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=13" BrowseName="1:IsIrrigating" ParentNodeId="ns=1;i=11" DataType="Boolean">
-    <DisplayName>IsIrrigating</DisplayName>
-    <Description>IsIrrigating</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=11</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=14" BrowseName="1:Mode" ParentNodeId="ns=1;i=11" DataType="String">
-    <DisplayName>Mode</DisplayName>
-    <Description>Mode</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=11</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=15" BrowseName="1:RemainingTime" ParentNodeId="ns=1;i=11" DataType="Int64">
-    <DisplayName>RemainingTime</DisplayName>
-    <Description>RemainingTime</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=11</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=16" BrowseName="1:CommandDuration" ParentNodeId="ns=1;i=11" DataType="Int64" AccessLevel="3" UserAccessLevel="3">
-    <DisplayName>CommandDuration</DisplayName>
-    <Description>CommandDuration</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=11</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=17" BrowseName="1:CommandStart" ParentNodeId="ns=1;i=11" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
-    <DisplayName>CommandStart</DisplayName>
-    <Description>CommandStart</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=11</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=18" BrowseName="1:CommandStop" ParentNodeId="ns=1;i=11" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
-    <DisplayName>CommandStop</DisplayName>
-    <Description>CommandStop</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=11</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAObject NodeId="ns=1;i=19" BrowseName="1:Station2_Valve1" ParentNodeId="ns=1;i=1">
-    <DisplayName>Station2_Valve1</DisplayName>
-    <Description>Station2_Valve1</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=20</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=21</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=22</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=23</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=24</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=25</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=26</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=54</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=71</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=1;i=20" BrowseName="1:Description" ParentNodeId="ns=1;i=19" DataType="String">
-    <DisplayName>Description</DisplayName>
-    <Description>Description</Description>
+  <UAObject NodeId="ns=1;i=26" BrowseName="1:Station1" ParentNodeId="ns=1;i=25">
+    <DisplayName>Station1</DisplayName>
+    <Description>IrrigationStationType</Description>
     <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=19</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=25</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=12</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=27</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=32</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=43</Reference>
     </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=21" BrowseName="1:IsIrrigating" ParentNodeId="ns=1;i=19" DataType="Boolean">
-    <DisplayName>IsIrrigating</DisplayName>
-    <Description>IsIrrigating</Description>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=27" BrowseName="1:StationInfo" ParentNodeId="ns=1;i=26">
+    <DisplayName>StationInfo</DisplayName>
+    <Description>StationInfo</Description>
     <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=19</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=22" BrowseName="1:Mode" ParentNodeId="ns=1;i=19" DataType="String">
-    <DisplayName>Mode</DisplayName>
-    <Description>Mode</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=19</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=23" BrowseName="1:RemainingTime" ParentNodeId="ns=1;i=19" DataType="Int64">
-    <DisplayName>RemainingTime</DisplayName>
-    <Description>RemainingTime</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=19</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=24" BrowseName="1:CommandDuration" ParentNodeId="ns=1;i=19" DataType="Int64" AccessLevel="3" UserAccessLevel="3">
-    <DisplayName>CommandDuration</DisplayName>
-    <Description>CommandDuration</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=19</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=25" BrowseName="1:CommandStart" ParentNodeId="ns=1;i=19" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
-    <DisplayName>CommandStart</DisplayName>
-    <Description>CommandStart</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=19</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=26" BrowseName="1:CommandStop" ParentNodeId="ns=1;i=19" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
-    <DisplayName>CommandStop</DisplayName>
-    <Description>CommandStop</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=19</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAObject NodeId="ns=1;i=27" BrowseName="1:Station3_Valve1" ParentNodeId="ns=1;i=1">
-    <DisplayName>Station3_Valve1</DisplayName>
-    <Description>Station3_Valve1</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=26</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=28</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=29</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=30</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=31</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=32</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=33</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=34</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=1;i=28" BrowseName="1:Description" ParentNodeId="ns=1;i=27" DataType="String">
+  <UAVariable NodeId="ns=1;i=28" BrowseName="1:StationId" ParentNodeId="ns=1;i=27" DataType="String">
+    <DisplayName>StationId</DisplayName>
+    <Description>StationId</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=27</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=29" BrowseName="1:StationType" ParentNodeId="ns=1;i=27" DataType="String">
+    <DisplayName>StationType</DisplayName>
+    <Description>StationType</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=27</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=30" BrowseName="1:ValveCount" ParentNodeId="ns=1;i=27" DataType="Int32">
+    <DisplayName>ValveCount</DisplayName>
+    <Description>ValveCount</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=27</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=31" BrowseName="1:Location" ParentNodeId="ns=1;i=27" DataType="String">
+    <DisplayName>Location</DisplayName>
+    <Description>Location</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=27</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=32" BrowseName="1:Valve1" ParentNodeId="ns=1;i=26">
+    <DisplayName>Valve1</DisplayName>
+    <Description>IrrigationValveType</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=26</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=1</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=33</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=34</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=39</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=33" BrowseName="1:Description" ParentNodeId="ns=1;i=32" DataType="String">
     <DisplayName>Description</DisplayName>
     <Description>Description</Description>
     <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=27</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=32</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=29" BrowseName="1:IsIrrigating" ParentNodeId="ns=1;i=27" DataType="Boolean">
-    <DisplayName>IsIrrigating</DisplayName>
-    <Description>IsIrrigating</Description>
+  <UAObject NodeId="ns=1;i=34" BrowseName="1:Status" ParentNodeId="ns=1;i=32">
+    <DisplayName>Status</DisplayName>
+    <Description>Status</Description>
     <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=27</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=30" BrowseName="1:Mode" ParentNodeId="ns=1;i=27" DataType="String">
-    <DisplayName>Mode</DisplayName>
-    <Description>Mode</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=27</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=31" BrowseName="1:RemainingTime" ParentNodeId="ns=1;i=27" DataType="Int64">
-    <DisplayName>RemainingTime</DisplayName>
-    <Description>RemainingTime</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=27</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=32" BrowseName="1:CommandDuration" ParentNodeId="ns=1;i=27" DataType="Int64" AccessLevel="3" UserAccessLevel="3">
-    <DisplayName>CommandDuration</DisplayName>
-    <Description>CommandDuration</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=27</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=33" BrowseName="1:CommandStart" ParentNodeId="ns=1;i=27" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
-    <DisplayName>CommandStart</DisplayName>
-    <Description>CommandStart</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=27</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=34" BrowseName="1:CommandStop" ParentNodeId="ns=1;i=27" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
-    <DisplayName>CommandStop</DisplayName>
-    <Description>CommandStop</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=27</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAObject NodeId="ns=1;i=35" BrowseName="1:Station3_Valve2" ParentNodeId="ns=1;i=1">
-    <DisplayName>Station3_Valve2</DisplayName>
-    <Description>Station3_Valve2</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=32</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=35</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=36</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=37</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=38</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=39</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=35" BrowseName="1:IsIrrigating" ParentNodeId="ns=1;i=34" DataType="Boolean">
+    <DisplayName>IsIrrigating</DisplayName>
+    <Description>IsIrrigating</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=34</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=36" BrowseName="1:Mode" ParentNodeId="ns=1;i=34" DataType="String">
+    <DisplayName>Mode</DisplayName>
+    <Description>Mode</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=34</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=37" BrowseName="1:RemainingTime" ParentNodeId="ns=1;i=34" DataType="Int32">
+    <DisplayName>RemainingTime</DisplayName>
+    <Description>RemainingTime</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=34</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=38" BrowseName="1:NextScheduledStart" ParentNodeId="ns=1;i=34" DataType="DateTime">
+    <DisplayName>NextScheduledStart</DisplayName>
+    <Description>NextScheduledStart</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=34</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=39" BrowseName="1:Commands" ParentNodeId="ns=1;i=32">
+    <DisplayName>Commands</DisplayName>
+    <Description>Commands</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=32</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=40</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=41</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=42</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=1;i=36" BrowseName="1:Description" ParentNodeId="ns=1;i=35" DataType="String">
-    <DisplayName>Description</DisplayName>
-    <Description>Description</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=35</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=37" BrowseName="1:IsIrrigating" ParentNodeId="ns=1;i=35" DataType="Boolean">
-    <DisplayName>IsIrrigating</DisplayName>
-    <Description>IsIrrigating</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=35</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=38" BrowseName="1:Mode" ParentNodeId="ns=1;i=35" DataType="String">
-    <DisplayName>Mode</DisplayName>
-    <Description>Mode</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=35</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=39" BrowseName="1:RemainingTime" ParentNodeId="ns=1;i=35" DataType="Int64">
-    <DisplayName>RemainingTime</DisplayName>
-    <Description>RemainingTime</Description>
-    <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=35</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=40" BrowseName="1:CommandDuration" ParentNodeId="ns=1;i=35" DataType="Int64" AccessLevel="3" UserAccessLevel="3">
+  <UAVariable NodeId="ns=1;i=40" BrowseName="1:CommandDuration" ParentNodeId="ns=1;i=39" DataType="Int32" AccessLevel="3" UserAccessLevel="3">
     <DisplayName>CommandDuration</DisplayName>
     <Description>CommandDuration</Description>
     <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=35</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=39</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=41" BrowseName="1:CommandStart" ParentNodeId="ns=1;i=35" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
+  <UAVariable NodeId="ns=1;i=41" BrowseName="1:CommandStart" ParentNodeId="ns=1;i=39" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
     <DisplayName>CommandStart</DisplayName>
     <Description>CommandStart</Description>
     <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=35</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=39</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=42" BrowseName="1:CommandStop" ParentNodeId="ns=1;i=35" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
+  <UAVariable NodeId="ns=1;i=42" BrowseName="1:CommandStop" ParentNodeId="ns=1;i=39" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
     <DisplayName>CommandStop</DisplayName>
     <Description>CommandStop</Description>
     <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=35</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=39</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=43" BrowseName="1:Valve2" ParentNodeId="ns=1;i=26">
+    <DisplayName>Valve2</DisplayName>
+    <Description>IrrigationValveType</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=26</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=1</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=44</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=45</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=50</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=44" BrowseName="1:Description" ParentNodeId="ns=1;i=43" DataType="String">
+    <DisplayName>Description</DisplayName>
+    <Description>Description</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=43</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=45" BrowseName="1:Status" ParentNodeId="ns=1;i=43">
+    <DisplayName>Status</DisplayName>
+    <Description>Status</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=43</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=46</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=47</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=48</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=49</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=46" BrowseName="1:IsIrrigating" ParentNodeId="ns=1;i=45" DataType="Boolean">
+    <DisplayName>IsIrrigating</DisplayName>
+    <Description>IsIrrigating</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=45</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=47" BrowseName="1:Mode" ParentNodeId="ns=1;i=45" DataType="String">
+    <DisplayName>Mode</DisplayName>
+    <Description>Mode</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=45</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=48" BrowseName="1:RemainingTime" ParentNodeId="ns=1;i=45" DataType="Int32">
+    <DisplayName>RemainingTime</DisplayName>
+    <Description>RemainingTime</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=45</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=49" BrowseName="1:NextScheduledStart" ParentNodeId="ns=1;i=45" DataType="DateTime">
+    <DisplayName>NextScheduledStart</DisplayName>
+    <Description>NextScheduledStart</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=45</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=50" BrowseName="1:Commands" ParentNodeId="ns=1;i=43">
+    <DisplayName>Commands</DisplayName>
+    <Description>Commands</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=43</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=51</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=52</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=53</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=51" BrowseName="1:CommandDuration" ParentNodeId="ns=1;i=50" DataType="Int32" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>CommandDuration</DisplayName>
+    <Description>CommandDuration</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=50</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=52" BrowseName="1:CommandStart" ParentNodeId="ns=1;i=50" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>CommandStart</DisplayName>
+    <Description>CommandStart</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=50</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=53" BrowseName="1:CommandStop" ParentNodeId="ns=1;i=50" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>CommandStop</DisplayName>
+    <Description>CommandStop</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=50</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=54" BrowseName="1:Station2" ParentNodeId="ns=1;i=25">
+    <DisplayName>Station2</DisplayName>
+    <Description>IrrigationStationType</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=25</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=12</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=55</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=60</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=55" BrowseName="1:StationInfo" ParentNodeId="ns=1;i=54">
+    <DisplayName>StationInfo</DisplayName>
+    <Description>StationInfo</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=54</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=56</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=57</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=59</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=56" BrowseName="1:StationId" ParentNodeId="ns=1;i=55" DataType="String">
+    <DisplayName>StationId</DisplayName>
+    <Description>StationId</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=55</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=57" BrowseName="1:StationType" ParentNodeId="ns=1;i=55" DataType="String">
+    <DisplayName>StationType</DisplayName>
+    <Description>StationType</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=55</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=58" BrowseName="1:ValveCount" ParentNodeId="ns=1;i=55" DataType="Int32">
+    <DisplayName>ValveCount</DisplayName>
+    <Description>ValveCount</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=55</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=59" BrowseName="1:Location" ParentNodeId="ns=1;i=55" DataType="String">
+    <DisplayName>Location</DisplayName>
+    <Description>Location</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=55</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=60" BrowseName="1:Valve1" ParentNodeId="ns=1;i=54">
+    <DisplayName>Valve1</DisplayName>
+    <Description>IrrigationValveType</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=54</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=1</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=61</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=62</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=67</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=61" BrowseName="1:Description" ParentNodeId="ns=1;i=60" DataType="String">
+    <DisplayName>Description</DisplayName>
+    <Description>Description</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=60</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=62" BrowseName="1:Status" ParentNodeId="ns=1;i=60">
+    <DisplayName>Status</DisplayName>
+    <Description>Status</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=60</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=63</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=64</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=65</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=66</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=63" BrowseName="1:IsIrrigating" ParentNodeId="ns=1;i=62" DataType="Boolean">
+    <DisplayName>IsIrrigating</DisplayName>
+    <Description>IsIrrigating</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=62</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=64" BrowseName="1:Mode" ParentNodeId="ns=1;i=62" DataType="String">
+    <DisplayName>Mode</DisplayName>
+    <Description>Mode</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=62</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=65" BrowseName="1:RemainingTime" ParentNodeId="ns=1;i=62" DataType="Int32">
+    <DisplayName>RemainingTime</DisplayName>
+    <Description>RemainingTime</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=62</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=66" BrowseName="1:NextScheduledStart" ParentNodeId="ns=1;i=62" DataType="DateTime">
+    <DisplayName>NextScheduledStart</DisplayName>
+    <Description>NextScheduledStart</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=62</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=67" BrowseName="1:Commands" ParentNodeId="ns=1;i=60">
+    <DisplayName>Commands</DisplayName>
+    <Description>Commands</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=60</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=68</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=69</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=70</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=68" BrowseName="1:CommandDuration" ParentNodeId="ns=1;i=67" DataType="Int32" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>CommandDuration</DisplayName>
+    <Description>CommandDuration</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=67</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=69" BrowseName="1:CommandStart" ParentNodeId="ns=1;i=67" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>CommandStart</DisplayName>
+    <Description>CommandStart</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=67</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=70" BrowseName="1:CommandStop" ParentNodeId="ns=1;i=67" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>CommandStop</DisplayName>
+    <Description>CommandStop</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=67</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=71" BrowseName="1:Station3" ParentNodeId="ns=1;i=25">
+    <DisplayName>Station3</DisplayName>
+    <Description>IrrigationStationType</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=25</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=12</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=72</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=77</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=88</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=72" BrowseName="1:StationInfo" ParentNodeId="ns=1;i=71">
+    <DisplayName>StationInfo</DisplayName>
+    <Description>StationInfo</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=71</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=73</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=74</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=75</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=76</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=73" BrowseName="1:StationId" ParentNodeId="ns=1;i=72" DataType="String">
+    <DisplayName>StationId</DisplayName>
+    <Description>StationId</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=72</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=74" BrowseName="1:StationType" ParentNodeId="ns=1;i=72" DataType="String">
+    <DisplayName>StationType</DisplayName>
+    <Description>StationType</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=72</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=75" BrowseName="1:ValveCount" ParentNodeId="ns=1;i=72" DataType="Int32">
+    <DisplayName>ValveCount</DisplayName>
+    <Description>ValveCount</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=72</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=76" BrowseName="1:Location" ParentNodeId="ns=1;i=72" DataType="String">
+    <DisplayName>Location</DisplayName>
+    <Description>Location</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=72</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=77" BrowseName="1:Valve1" ParentNodeId="ns=1;i=71">
+    <DisplayName>Valve1</DisplayName>
+    <Description>IrrigationValveType</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=71</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=1</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=78</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=79</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=84</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=78" BrowseName="1:Description" ParentNodeId="ns=1;i=77" DataType="String">
+    <DisplayName>Description</DisplayName>
+    <Description>Description</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=77</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=79" BrowseName="1:Status" ParentNodeId="ns=1;i=77">
+    <DisplayName>Status</DisplayName>
+    <Description>Status</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=77</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=80</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=81</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=82</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=83</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=80" BrowseName="1:IsIrrigating" ParentNodeId="ns=1;i=79" DataType="Boolean">
+    <DisplayName>IsIrrigating</DisplayName>
+    <Description>IsIrrigating</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=79</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=81" BrowseName="1:Mode" ParentNodeId="ns=1;i=79" DataType="String">
+    <DisplayName>Mode</DisplayName>
+    <Description>Mode</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=79</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=82" BrowseName="1:RemainingTime" ParentNodeId="ns=1;i=79" DataType="Int32">
+    <DisplayName>RemainingTime</DisplayName>
+    <Description>RemainingTime</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=79</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=83" BrowseName="1:NextScheduledStart" ParentNodeId="ns=1;i=79" DataType="DateTime">
+    <DisplayName>NextScheduledStart</DisplayName>
+    <Description>NextScheduledStart</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=79</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=84" BrowseName="1:Commands" ParentNodeId="ns=1;i=77">
+    <DisplayName>Commands</DisplayName>
+    <Description>Commands</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=77</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=85</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=86</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=87</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=85" BrowseName="1:CommandDuration" ParentNodeId="ns=1;i=84" DataType="Int32" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>CommandDuration</DisplayName>
+    <Description>CommandDuration</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=84</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=86" BrowseName="1:CommandStart" ParentNodeId="ns=1;i=84" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>CommandStart</DisplayName>
+    <Description>CommandStart</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=84</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=87" BrowseName="1:CommandStop" ParentNodeId="ns=1;i=84" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>CommandStop</DisplayName>
+    <Description>CommandStop</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=84</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=88" BrowseName="1:Valve2" ParentNodeId="ns=1;i=71">
+    <DisplayName>Valve2</DisplayName>
+    <Description>IrrigationValveType</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=71</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=1</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=89</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=90</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=95</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=89" BrowseName="1:Description" ParentNodeId="ns=1;i=88" DataType="String">
+    <DisplayName>Description</DisplayName>
+    <Description>Description</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=88</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=90" BrowseName="1:Status" ParentNodeId="ns=1;i=88">
+    <DisplayName>Status</DisplayName>
+    <Description>Status</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=88</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=91</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=92</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=93</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=94</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=91" BrowseName="1:IsIrrigating" ParentNodeId="ns=1;i=90" DataType="Boolean">
+    <DisplayName>IsIrrigating</DisplayName>
+    <Description>IsIrrigating</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=90</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=92" BrowseName="1:Mode" ParentNodeId="ns=1;i=90" DataType="String">
+    <DisplayName>Mode</DisplayName>
+    <Description>Mode</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=90</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=93" BrowseName="1:RemainingTime" ParentNodeId="ns=1;i=90" DataType="Int32">
+    <DisplayName>RemainingTime</DisplayName>
+    <Description>RemainingTime</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=90</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=94" BrowseName="1:NextScheduledStart" ParentNodeId="ns=1;i=90" DataType="DateTime">
+    <DisplayName>NextScheduledStart</DisplayName>
+    <Description>NextScheduledStart</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=90</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=95" BrowseName="1:Commands" ParentNodeId="ns=1;i=88">
+    <DisplayName>Commands</DisplayName>
+    <Description>Commands</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=88</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=96</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=97</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=98</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=96" BrowseName="1:CommandDuration" ParentNodeId="ns=1;i=95" DataType="Int32" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>CommandDuration</DisplayName>
+    <Description>CommandDuration</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=95</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=97" BrowseName="1:CommandStart" ParentNodeId="ns=1;i=95" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>CommandStart</DisplayName>
+    <Description>CommandStart</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=95</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=98" BrowseName="1:CommandStop" ParentNodeId="ns=1;i=95" DataType="Boolean" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>CommandStop</DisplayName>
+    <Description>CommandStop</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=95</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
     </References>
   </UAVariable>
