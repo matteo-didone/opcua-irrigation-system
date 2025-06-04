@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """
-Client semplificato che usa variabili invece di metodi OPC-UA
+Client professionale per il server con ObjectTypes
+Compatibile con la struttura gerarchica: Stations/StationX/ValveY
 """
 
 import asyncio
 import sys
-from asyncua import Client
+from asyncua import Client, ua
 
-class SimpleIrrigationController:
-    """Client semplificato per controllo tramite variabili"""
+class ProfessionalIrrigationController:
+    """Client professionale per la struttura con ObjectTypes"""
     
     def __init__(self, server_url: str = "opc.tcp://localhost:48400/irrigation"):
         self.server_url = server_url
@@ -30,44 +31,73 @@ class SimpleIrrigationController:
                 
         # Scopri nodi
         await self._discover_nodes()
-        print("✅ Sistema scoperto")
+        print("✅ Sistema professionale scoperto")
         
     async def _discover_nodes(self):
-        """Scopre i nodi del sistema"""
+        """Scopre i nodi del sistema professionale"""
         root = self.client.get_objects_node()
         irrigation_system = await root.get_child([f"{self.ns_idx}:IrrigationSystem"])
         
-        # Sistema state
-        system_state = await irrigation_system.get_child([f"{self.ns_idx}:SystemState"])
+        # Controller → SystemState
+        controller = await irrigation_system.get_child([f"{self.ns_idx}:Controller"])
+        system_state = await controller.get_child([f"{self.ns_idx}:SystemState"])
         self.nodes["system_state"] = system_state
         
-        # Valvole
-        valve_ids = ["Station1_Valve1", "Station1_Valve2", "Station2_Valve1", "Station3_Valve1", "Station3_Valve2"]
+        # Stations folder
+        stations_folder = await irrigation_system.get_child([f"{self.ns_idx}:Stations"])
         
-        for valve_id in valve_ids:
+        # Stazioni e valvole
+        station_ids = ["Station1", "Station2", "Station3"]
+        
+        for station_id in station_ids:
             try:
-                valve_node = await irrigation_system.get_child([f"{self.ns_idx}:{valve_id}"])
+                station_node = await stations_folder.get_child([f"{self.ns_idx}:{station_id}"])
                 
-                # Status
-                is_irrigating = await valve_node.get_child([f"{self.ns_idx}:IsIrrigating"])
-                mode = await valve_node.get_child([f"{self.ns_idx}:Mode"])
-                remaining_time = await valve_node.get_child([f"{self.ns_idx}:RemainingTime"])
+                # StationInfo
+                station_info = await station_node.get_child([f"{self.ns_idx}:StationInfo"])
+                valve_count_node = await station_info.get_child([f"{self.ns_idx}:ValveCount"])
+                valve_count = await valve_count_node.read_value()
                 
-                # Commands
-                duration_cmd = await valve_node.get_child([f"{self.ns_idx}:CommandDuration"])
-                start_cmd = await valve_node.get_child([f"{self.ns_idx}:CommandStart"])
-                stop_cmd = await valve_node.get_child([f"{self.ns_idx}:CommandStop"])
-                
-                self.nodes[valve_id] = {
-                    "irrigating": is_irrigating,
-                    "mode": mode,
-                    "remaining": remaining_time,
-                    "duration_cmd": duration_cmd,
-                    "start_cmd": start_cmd,
-                    "stop_cmd": stop_cmd
-                }
+                # Valvole della stazione
+                for valve_num in range(1, valve_count + 1):
+                    valve_id = f"Valve{valve_num}"
+                    full_valve_id = f"{station_id}_{valve_id}"
+                    
+                    try:
+                        valve_node = await station_node.get_child([f"{self.ns_idx}:{valve_id}"])
+                        
+                        # Status
+                        status_folder = await valve_node.get_child([f"{self.ns_idx}:Status"])
+                        is_irrigating = await status_folder.get_child([f"{self.ns_idx}:IsIrrigating"])
+                        mode = await status_folder.get_child([f"{self.ns_idx}:Mode"])
+                        remaining_time = await status_folder.get_child([f"{self.ns_idx}:RemainingTime"])
+                        
+                        # Commands
+                        commands_folder = await valve_node.get_child([f"{self.ns_idx}:Commands"])
+                        duration_cmd = await commands_folder.get_child([f"{self.ns_idx}:CommandDuration"])
+                        start_cmd = await commands_folder.get_child([f"{self.ns_idx}:CommandStart"])
+                        stop_cmd = await commands_folder.get_child([f"{self.ns_idx}:CommandStop"])
+                        
+                        # Description
+                        description = await valve_node.get_child([f"{self.ns_idx}:Description"])
+                        desc_text = await description.read_value()
+                        
+                        self.nodes[full_valve_id] = {
+                            "description": desc_text,
+                            "irrigating": is_irrigating,
+                            "mode": mode,
+                            "remaining": remaining_time,
+                            "duration_cmd": duration_cmd,
+                            "start_cmd": start_cmd,
+                            "stop_cmd": stop_cmd,
+                            "station": station_id,
+                            "valve": valve_id
+                        }
+                    except:
+                        pass  # Valvola non trovata
+                        
             except:
-                pass  # Valvola non trovata
+                pass  # Stazione non trovata
                 
     async def get_system_state(self) -> bool:
         """Stato del sistema"""
@@ -88,12 +118,12 @@ class SimpleIrrigationController:
         try:
             valve = self.nodes[valve_id]
             
-            # Imposta durata e comando start
-            await valve["duration_cmd"].write_value(duration)
+            # Imposta durata e comando start (con tipi OPC-UA corretti)
+            await valve["duration_cmd"].write_value(ua.Variant(duration, ua.VariantType.Int32))
             await valve["start_cmd"].write_value(True)
             
             mins, secs = divmod(duration, 60)
-            print(f"✅ Comando inviato: {valve_id} per {mins:02d}:{secs:02d}")
+            print(f"✅ Comando inviato: {valve['description']} per {mins:02d}:{secs:02d}")
             return True
             
         except Exception as e:
@@ -109,7 +139,7 @@ class SimpleIrrigationController:
         try:
             valve = self.nodes[valve_id]
             await valve["stop_cmd"].write_value(True)
-            print(f"✅ Stop inviato: {valve_id}")
+            print(f"✅ Stop inviato: {valve['description']}")
             return True
             
         except Exception as e:
@@ -129,24 +159,32 @@ class SimpleIrrigationController:
         return {
             "irrigating": irrigating,
             "mode": mode,
-            "remaining": remaining
+            "remaining": remaining,
+            "description": valve["description"]
         }
         
     def list_valves(self):
-        """Lista valvole"""
-        print("\n💧 Valvole disponibili:")
-        descriptions = {
-            "Station1_Valve1": "Giardino Anteriore - Valvola 1",
-            "Station1_Valve2": "Giardino Anteriore - Valvola 2", 
-            "Station2_Valve1": "Aiuole Laterali - Valvola 1",
-            "Station3_Valve1": "Giardino Posteriore - Valvola 1",
-            "Station3_Valve2": "Giardino Posteriore - Valvola 2"
-        }
+        """Lista valvole con struttura gerarchica"""
+        print("\n💧 Stazioni e valvole disponibili:")
         
-        for valve_id in self.nodes:
+        # Raggruppa per stazione
+        stations = {}
+        for valve_id, valve_data in self.nodes.items():
             if valve_id != "system_state":
-                desc = descriptions.get(valve_id, valve_id)
-                print(f"  • {valve_id}: {desc}")
+                station = valve_data["station"]
+                if station not in stations:
+                    stations[station] = []
+                stations[station].append((valve_id, valve_data))
+        
+        # Mostra struttura gerarchica
+        for station_id in sorted(stations.keys()):
+            valves = stations[station_id]
+            valve_count = len(valves)
+            station_type = "DoubleValve" if valve_count > 1 else "SingleValve"
+            
+            print(f"\n  📁 {station_id} ({station_type} - {valve_count} valvole):")
+            for valve_id, valve_data in sorted(valves):
+                print(f"    💧 {valve_id}: {valve_data['description']}")
         print()
         
     async def disconnect(self):
@@ -155,8 +193,9 @@ class SimpleIrrigationController:
         print("✅ Disconnesso")
 
 async def interactive_mode(controller):
-    """Modalità interattiva semplificata"""
-    print("🌱 Controller Semplificato - Sistema di Irrigazione")
+    """Modalità interattiva professionale"""
+    print("🌱 Controller Professionale - Sistema di Irrigazione con ObjectTypes")
+    print("   Struttura: IrrigationSystem/Controller + Stations/StationX/ValveY")
     print("   Comandi: help, status, list, on, off, start <valvola> <durata>, stop <valvola>, exit")
     print()
     
@@ -174,17 +213,35 @@ async def interactive_mode(controller):
             elif cmd == "help":
                 print("Comandi:")
                 print("  status                    - Stato sistema")
-                print("  list                      - Lista valvole")
+                print("  list                      - Lista stazioni e valvole")
                 print("  on/off                    - Accendi/spegni sistema")
                 print("  start <valvola> <durata>  - Avvia irrigazione")
                 print("  stop <valvola>            - Ferma irrigazione")
                 print("  exit                      - Esci")
                 print("\nEsempio: start Station1_Valve1 60")
+                print("Formato valvola: StationX_ValveY (es. Station1_Valve1)")
                 
             elif cmd == "status":
                 system_on = await controller.get_system_state()
                 status = "🟢 ACCESO" if system_on else "🔴 SPENTO"
                 print(f"Sistema: {status}")
+                
+                # Mostra anche stato valvole attive
+                active_valves = []
+                for valve_id in controller.nodes:
+                    if valve_id != "system_state":
+                        valve_status = await controller.get_valve_status(valve_id)
+                        if valve_status and valve_status["irrigating"]:
+                            remaining = valve_status["remaining"]
+                            mins, secs = divmod(remaining, 60)
+                            active_valves.append(f"{valve_status['description']} ({mins:02d}:{secs:02d})")
+                
+                if active_valves:
+                    print("💧 Valvole in irrigazione:")
+                    for valve_info in active_valves:
+                        print(f"   • {valve_info}")
+                else:
+                    print("⭕ Nessuna valvola in irrigazione")
                 
             elif cmd == "list":
                 controller.list_valves()
@@ -198,6 +255,7 @@ async def interactive_mode(controller):
             elif cmd == "start":
                 if len(parts) != 3:
                     print("❌ Uso: start <valvola> <durata_secondi>")
+                    print("   Esempio: start Station1_Valve1 60")
                     continue
                 valve_id, duration_str = parts[1], parts[2]
                 try:
@@ -209,6 +267,7 @@ async def interactive_mode(controller):
             elif cmd == "stop":
                 if len(parts) != 2:
                     print("❌ Uso: stop <valvola>")
+                    print("   Esempio: stop Station1_Valve1")
                     continue
                 valve_id = parts[1]
                 await controller.stop_irrigation(valve_id)
@@ -224,10 +283,10 @@ async def interactive_mode(controller):
 
 async def main():
     """Main"""
-    controller = SimpleIrrigationController()
+    controller = ProfessionalIrrigationController()
     
     try:
-        print("🔌 Connessione al server semplificato...")
+        print("🔌 Connessione al server professionale...")
         await controller.connect()
         await interactive_mode(controller)
     except Exception as e:

@@ -1,33 +1,65 @@
-# 🌱 Sistema di Irrigazione OPC-UA
+# 🌱 Sistema di Irrigazione OPC-UA Professionale
 
-Un sistema completo di controllo irrigazione implementato con OPC-UA, sviluppato per l'esercitazione del corso di Automazione Industriale.
+Un sistema completo di controllo irrigazione implementato con **ObjectTypes personalizzati OPC-UA**, sviluppato per l'esercitazione del corso di Automazione Industriale.
 
 ## 📋 Descrizione
 
-Il sistema simula un impianto di irrigazione per giardino composto da:
+Il sistema simula un impianto di irrigazione professionale per giardino composto da:
 
 - **1 Controller principale**: gestisce l'accensione/spegnimento del sistema
-- **3 Centraline**: controllano i rubinetti dell'acqua
-  - Station1: 2 rubinetti (giardino anteriore)
-  - Station2: 1 rubinetto (aiuole laterali)
-  - Station3: 2 rubinetti (giardino posteriore)
+- **3 Centraline**: controllano i rubinetti dell'acqua con ObjectTypes dedicati
+  - Station1: 2 rubinetti (giardino anteriore) - DoubleValve
+  - Station2: 1 rubinetto (aiuole laterali) - SingleValve
+  - Station3: 2 rubinetti (giardino posteriore) - DoubleValve
 
-## 🏗️ Architettura
+## 🏗️ Architettura Professionale
 
 ```
-┌─────────────────┐    OPC-UA    ┌─────────────────┐
-│   Server        │◄─────────────┤   Client        │
-│   irrigation_   │              │   monitor_      │
-│   server.py     │              │   client.py     │
-└─────────────────┘              └─────────────────┘
-                                          │
-                                          │ OPC-UA
-                                          ▼
-                                 ┌─────────────────┐
-                                 │   Client        │
-                                 │   control_      │
-                                 │   client.py     │
-                                 └─────────────────┘
+┌─────────────────────────┐    OPC-UA    ┌─────────────────────────┐
+│   Professional Server  │◄─────────────┤   Professional Monitor  │
+│   + ObjectTypes        │              │   Client                │
+│   irrigation_server.py │              │   monitor_client.py     │
+└─────────────────────────┘              └─────────────────────────┘
+            │                                        │
+            │ Export NodeSet                         │ OPC-UA
+            ▼                                        ▼
+┌─────────────────────────┐              ┌─────────────────────────┐
+│   UAModeler            │              │   Professional Control │
+│   + ObjectTypes        │              │   Client                │
+│   Import/Edit          │              │   control_client.py     │
+└─────────────────────────┘              └─────────────────────────┘
+```
+
+## 🔧 ObjectTypes Personalizzati
+
+### Information Model Professionale
+
+```
+IrrigationSystemType (ObjectType)
+├── Controller/
+│   └── SystemState (Boolean, Writable)
+└── Stations/
+    └── [IrrigationStationType instances]
+
+IrrigationStationType (ObjectType)
+├── StationInfo/
+│   ├── StationId (String)
+│   ├── Description (String)
+│   ├── StationType (String)
+│   └── ValveCount (Int32)
+└── [IrrigationValveType instances]
+
+IrrigationValveType (ObjectType)
+├── Description (String)
+├── Status/
+│   ├── IsIrrigating (Boolean)
+│   ├── Mode (String)
+│   ├── RemainingTime (Int32)
+│   └── NextScheduledStart (DateTime)
+└── Commands/
+    ├── CommandDuration (Int32, Writable)
+    ├── CommandStart (Boolean, Writable)
+    └── CommandStop (Boolean, Writable)
 ```
 
 ## 📁 Struttura del Progetto
@@ -35,16 +67,22 @@ Il sistema simula un impianto di irrigazione per giardino composto da:
 ```
 opcua-irrigation-system/
 ├── server/
-│   └── irrigation_server.py     # Server OPC-UA principale
+│   ├── irrigation_server.py            # Server OPC-UA professionale con ObjectTypes
+│   └── professional_irrigation_server.py # Alias per chiarezza
 ├── client/
-│   ├── monitor_client.py        # Client per monitoraggio
-│   └── control_client.py        # Client per controllo
+│   ├── monitor_client.py               # Monitor client professionale
+│   ├── control_client.py               # Control client professionale
+│   ├── professional_monitor_client.py  # Alias per chiarezza
+│   └── professional_control_client.py  # Alias per chiarezza
 ├── config/
-│   └── server_config.py         # Configurazioni server
+│   └── server_config.py                # Configurazioni server
 ├── docs/
-│   └── addressspace_design.md   # Documentazione AddressSpace
-├── requirements.txt             # Dipendenze Python
-└── README.md                   # Questo file
+│   └── addressspace_design.md          # Documentazione AddressSpace professionale
+├── export/
+│   ├── irrigation_professional_nodeset.xml # NodeSet esportato per UAModeler
+│   └── irrigation_nodeset.xml              # NodeSet base (legacy)
+├── requirements.txt                     # Dipendenze Python
+└── README.md                           # Questo file
 ```
 
 ## 🚀 Installazione e Setup
@@ -55,216 +93,251 @@ opcua-irrigation-system/
 pip install -r requirements.txt
 ```
 
-### 2. Avvia il server
+### 2. Avvia il server professionale
 
 ```bash
 python server/irrigation_server.py
 ```
 
-Il server sarà disponibile su: `opc.tcp://localhost:4840/irrigation`
+Il server sarà disponibile su: `opc.tcp://localhost:48400/irrigation`
+
+**Comandi server**:
+- Premi `e` + INVIO per esportare NodeSet XML per UAModeler
+- Premi `q` + INVIO per uscire
 
 ### 3. Avvia il monitoraggio (in un nuovo terminale)
 
 ```bash
-# Monitoraggio continuo
+# Monitoraggio continuo professionale
 python client/monitor_client.py
 
-# Lettura singola
+# Lettura singola con ObjectTypes
 python client/monitor_client.py -s
+
+# Monitoraggio personalizzato
+python client/monitor_client.py -i 1  # Aggiornamento ogni secondo
 ```
 
 ### 4. Controlla l'irrigazione (in un altro terminale)
 
 ```bash
-# Modalità interattiva
+# Modalità interattiva professionale
 python client/control_client.py
 
-# Comandi diretti
-python client/control_client.py start Station1 Valve1 300
-python client/control_client.py stop Station1 Valve1
+# Comandi diretti con struttura gerarchica
+python client/control_client.py start Station1_Valve1 300
+python client/control_client.py stop Station1_Valve1
 ```
 
-## 🎮 Utilizzo
+## 🎮 Utilizzo Professionale
 
-### Server OPC-UA
+### Server OPC-UA con ObjectTypes
 
 Il server espone automaticamente:
-- Sistema con 3 stazioni preconfigurate
-- Aggiornamento stato ogni secondo
-- Metodi per controllo irrigazione
-- Simulazione realistica dei tempi
+- **ObjectTypes personalizzati**: IrrigationSystemType, IrrigationStationType, IrrigationValveType
+- **Istanze strutturate**: Sistema → Stations → StationX → ValveY
+- **Export automatico**: NodeSet XML per UAModeler
+- **Aggiornamento real-time**: Stato ogni secondo con tipi coerenti
 
-### Client di Monitoraggio
+### Client di Monitoraggio Professionale
 
 ```bash
-# Monitoraggio continuo con aggiornamento ogni 2 secondi
+# Monitoraggio con architettura ObjectTypes
 python client/monitor_client.py
 
-# Monitoraggio ogni 5 secondi
-python client/monitor_client.py -i 5
+# Visualizzazione gerarchica:
+# IrrigationSystem/Controller + Stations/StationX/ValveY
 
-# Lettura singola dello stato
-python client/monitor_client.py -s
-
-# Server remoto
-python client/monitor_client.py -u opc.tcp://192.168.1.100:4840/irrigation
+# Opzioni avanzate
+python client/monitor_client.py -i 5    # Ogni 5 secondi
+python client/monitor_client.py -s      # Lettura singola
+python client/monitor_client.py -u opc.tcp://remote:48400/irrigation
 ```
 
-### Client di Controllo
+### Client di Controllo Professionale
 
 #### Modalità Interattiva
 ```bash
 python client/control_client.py
-🌿 > help                              # Mostra comandi
-🌿 > list                              # Elenca stazioni
-🌿 > status                            # Stato sistema
-🌿 > on                                # Accende sistema
-🌿 > start Station1 Valve1 300         # Irriga 5 minuti
-🌿 > auto Station2 Valve1 06:00 1800   # Programma alle 06:00 per 30 min
-🌿 > stop Station1 Valve1              # Ferma irrigazione
-🌿 > exit                              # Esce
+🌿 > help                                    # Mostra comandi
+🌿 > list                                    # Struttura gerarchica
+🌿 > status                                  # Stato sistema + valvole attive
+🌿 > on                                      # Accende sistema
+🌿 > start Station1_Valve1 300               # Irriga valvola specifica
+🌿 > stop Station1_Valve1                    # Ferma irrigazione
+🌿 > exit                                    # Esce
 ```
 
-#### Modalità Comando
+#### Struttura Comandi
 ```bash
 # Controllo sistema
 python client/control_client.py on
 python client/control_client.py off
 python client/control_client.py status
 
-# Irrigazione manuale
-python client/control_client.py start Station1 Valve1 300
+# Irrigazione con naming gerarchico
+python client/control_client.py start Station1_Valve1 300  # Giardino Anteriore - Valvola 1
+python client/control_client.py start Station2_Valve1 180  # Aiuole Laterali - Valvola 1
+python client/control_client.py start Station3_Valve2 240  # Giardino Posteriore - Valvola 2
 
 # Ferma irrigazione
-python client/control_client.py stop Station1 Valve1
+python client/control_client.py stop Station1_Valve1
 
-# Lista stazioni
+# Lista con descrizioni
 python client/control_client.py list
 ```
 
-## 🌐 AddressSpace OPC-UA
+## 🌐 AddressSpace OPC-UA Professionale
 
-### Struttura Completa
+### Struttura Gerarchica Completa
 
 ```
 Objects/
-└── IrrigationSystem/
+└── IrrigationSystem/ (IrrigationSystemType)
     ├── Controller/
-    │   ├── SystemState (Boolean)
-    │   ├── TurnOn() (Method)
-    │   └── TurnOff() (Method)
+    │   └── SystemState (Boolean, Writable)
     └── Stations/
-        ├── Station1/ (DoubleValve)
+        ├── Station1/ (IrrigationStationType)
         │   ├── StationInfo/
-        │   ├── Valve1/
+        │   │   ├── StationId: "Station1"
+        │   │   ├── Description: "Giardino Anteriore"
+        │   │   ├── StationType: "DoubleValve"
+        │   │   └── ValveCount: 2
+        │   ├── Valve1/ (IrrigationValveType)
+        │   │   ├── Description: "Giardino Anteriore - Valvola 1"
         │   │   ├── Status/
+        │   │   │   ├── IsIrrigating (Boolean)
+        │   │   │   ├── Mode (String)
+        │   │   │   ├── RemainingTime (Int32)
+        │   │   │   └── NextScheduledStart (DateTime)
         │   │   └── Commands/
-        │   └── Valve2/
-        ├── Station2/ (SingleValve)
-        └── Station3/ (DoubleValve)
+        │   │       ├── CommandDuration (Int32, Writable)
+        │   │       ├── CommandStart (Boolean, Writable)
+        │   │       └── CommandStop (Boolean, Writable)
+        │   └── Valve2/ (IrrigationValveType)
+        ├── Station2/ (IrrigationStationType - SingleValve)
+        └── Station3/ (IrrigationStationType - DoubleValve)
 ```
 
-### Namespace
+### Namespace e ObjectTypes
 
 - **URI**: `http://mvlabs.it/irrigation`
 - **Index**: 2
+- **ObjectTypes**: Visibili in UAModeler sotto Types → ObjectTypes
+- **Istanze**: Sotto Objects → IrrigationSystem
 
-## 📊 Esempi di Scenario
+## 📊 Scenari di Utilizzo Professionale
 
-### Scenario 1: Irrigazione Mattutina
+### Scenario 1: Test Completo ObjectTypes
 ```bash
-# 1. Accendi il sistema
-python client/control_client.py on
+# 1. Avvia server con ObjectTypes
+python server/irrigation_server.py
 
-# 2. Programma irrigazione automatica alle 06:00
-python client/control_client.py auto Station1 Valve1 06:00 1800  # 30 min
-python client/control_client.py auto Station2 Valve1 06:30 900   # 15 min
-python client/control_client.py auto Station3 Valve1 07:00 1200  # 20 min
+# 2. Esporta NodeSet per UAModeler (nel server)
+e
 
-# 3. Monitora il sistema
-python client/monitor_client.py
+# 3. Importa in UAModeler
+# File → Import → irrigation_professional_nodeset.xml
+
+# 4. Testa funzionalità
+python client/control_client.py
+🌿 > list
+🌿 > start Station1_Valve1 60
+🌿 > status
 ```
 
-### Scenario 2: Irrigazione di Emergenza
+### Scenario 2: Monitoraggio Multi-Valvola
 ```bash
-# 1. Verifica stato
-python client/control_client.py status
+# 1. Avvia irrigazione su più valvole
+python client/control_client.py start Station1_Valve1 300
+python client/control_client.py start Station1_Valve2 240
+python client/control_client.py start Station3_Valve1 180
 
-# 2. Avvia irrigazione immediata
-python client/control_client.py start Station1 Valve1 600   # 10 minuti
-python client/control_client.py start Station1 Valve2 600   # 10 minuti
+# 2. Monitora in tempo reale
+python client/monitor_client.py -i 1
 
-# 3. Monitora in tempo reale
-python client/monitor_client.py -i 1  # aggiornamento ogni secondo
+# 3. Verifica countdown simultaneo
 ```
 
-## 🔧 Configurazione
+### Scenario 3: Validazione Architettura
+```bash
+# 1. Verifica ObjectTypes in UAModeler
+# Types → ObjectTypes → IrrigationSystemType, etc.
+
+# 2. Verifica istanze
+# Objects → IrrigationSystem → Controller + Stations
+
+# 3. Test modifiche in UAModeler
+# Aggiungi proprietà → Esporta → Reimporta
+```
+
+## 🔧 Configurazione Professionale
 
 ### Parametri Server
-- **Endpoint**: `opc.tcp://localhost:4840/irrigation`
-- **Aggiornamento**: 1 secondo
+- **Endpoint**: `opc.tcp://localhost:48400/irrigation`
+- **Aggiornamento**: 1 secondo con tipi OPC-UA corretti
 - **Security**: None (per sviluppo)
+- **ObjectTypes**: Creati automaticamente all'avvio
 
-### Personalizzazione
-Modifica `server/irrigation_server.py` per:
-- Cambiare numero di stazioni
-- Modificare numero di valvole per stazione
-- Aggiungere sensori (temperatura, umidità, etc.)
-- Implementare logiche di irrigazione più complesse
+### Export NodeSet
+Il server può esportare automaticamente il NodeSet XML:
+```bash
+# Durante l'esecuzione del server
+e  # Genera irrigation_professional_nodeset.xml
+```
 
-## 🐛 Troubleshooting
+### UAModeler Integration
+1. **Import**: File → Import → NodeSet → `irrigation_professional_nodeset.xml`
+2. **Visualizza ObjectTypes**: Types → ObjectTypes
+3. **Visualizza Istanze**: Objects → IrrigationSystem
+4. **Modifica**: Personalizza ObjectTypes e istanze
+5. **Export**: File → Export → NodeSet per riutilizzo
+
+## 🐛 Troubleshooting Professionale
+
+### Errori di Tipo (Type Mismatch)
+```
+❌ BadTypeMismatch: Int64 vs Int32
+```
+**Soluzione**: Il server usa tipi OPC-UA corretti (Int32) automaticamente
+
+### ObjectTypes non visibili in UAModeler
+```
+❌ ObjectTypes mancanti
+```
+**Soluzioni**:
+1. Verifica che l'import del NodeSet sia andato a buon fine
+2. Controlla Types → ObjectTypes nella vista ad albero
+3. Assicurati di aver importato il file `irrigation_professional_nodeset.xml`
+
+### Client non trova la struttura gerarchica
+```
+❌ Errore: BadNoMatch
+```
+**Soluzione**: 
+1. Verifica che il server professionale sia in esecuzione
+2. Usa i nomi corretti: `Station1_Valve1`, non `Station1/Valve1`
+3. Controlla il namespace URI: `http://mvlabs.it/irrigation`
 
 ### Server non si avvia
 ```
-❌ Errore: [Errno 98] Address already in use
+❌ Errore: Address already in use
 ```
-**Soluzione**: Un altro processo sta usando la porta 4840
+**Soluzione**: Porta 48400 occupata
 ```bash
-# Linux/Mac
-sudo lsof -i :4840
-kill <PID>
-
 # Windows
-netstat -ano | findstr :4840
+netstat -ano | findstr :48400
 taskkill /PID <PID> /F
+
+# Linux/Mac
+sudo lsof -i :48400
+kill <PID>
 ```
 
-### Client non si connette
-```
-❌ Impossibile connettersi al server OPC-UA
-```
-**Soluzioni**:
-1. Verifica che il server sia in esecuzione
-2. Controlla firewall/antivirus
-3. Verifica l'URL del server
+## 📚 Riferimenti Professionali
 
-### Errori di dipendenze
-```
-❌ Libreria asyncua non trovata!
-```
-**Soluzione**:
-```bash
-pip install asyncua
-# oppure
-pip install -r requirements.txt
-```
-
-## 📚 Riferimenti
-
-- [Documentazione OPC-UA](https://opcfoundation.org/)
-- [Libreria asyncua](https://python-opcua.readthedocs.io/)
-- [Specifica OPC-UA](https://reference.opcfoundation.org/)
-
-## 👥 Autori
-
-Sviluppato per il corso di Automazione Industriale - MVLabs
-- Esercitazione OPC-UA
-- Sistema di Irrigazione IoT
-
-## 📄 Licenza
-
-Progetto didattico - Uso educativo
-
----
-
-🌱 **Happy Irrigation!** 🌱
+- [OPC-UA Specification](https://opcfoundation.org/developer-tools/specifications-unified-architecture/)
+- [Information Modeling](https://opcfoundation.org/developer-tools/documents/)
+- [Asyncua Documentation](https://python-opcua.readthedocs.io/)
+- [UAModeler Guide](https://www.unified-automation.com/products/development-tools/uamodeler.html)
+- [OPC-UA Companion Specifications](https://opcfoundation.org/markets-collaboration/specifications/)

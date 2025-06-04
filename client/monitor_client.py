@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Monitor client semplificato per il server con variabili
+Monitor client professionale per il server con ObjectTypes
 """
 
 import asyncio
@@ -16,8 +16,8 @@ from asyncua.common.node import Node
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
 
-class SimpleIrrigationMonitor:
-    """Monitor per il server semplificato"""
+class ProfessionalIrrigationMonitor:
+    """Monitor per il server professionale con ObjectTypes"""
     
     def __init__(self, server_url: str = "opc.tcp://localhost:48400/irrigation"):
         self.server_url = server_url
@@ -43,116 +43,149 @@ class SimpleIrrigationMonitor:
                 
             # Scopri nodi
             await self._discover_nodes()
-            print("✅ Sistema di irrigazione scoperto")
+            print("✅ Sistema professionale di irrigazione scoperto")
             
         except Exception as e:
             print(f"❌ Errore durante la connessione: {e}")
             raise
             
     async def _discover_nodes(self):
-        """Scopre tutti i nodi del sistema semplificato"""
+        """Scopre tutti i nodi del sistema professionale"""
         root = self.client.get_objects_node()
         
         # Sistema di irrigazione
         irrigation_system = await root.get_child([f"{self.ns_idx}:IrrigationSystem"])
         
-        # Stato sistema
-        system_state = await irrigation_system.get_child([f"{self.ns_idx}:SystemState"])
+        # Controller → SystemState
+        controller = await irrigation_system.get_child([f"{self.ns_idx}:Controller"])
+        system_state = await controller.get_child([f"{self.ns_idx}:SystemState"])
         self.nodes["system_state"] = system_state
         
-        # Valvole (struttura semplificata)
-        valve_ids = ["Station1_Valve1", "Station1_Valve2", "Station2_Valve1", "Station3_Valve1", "Station3_Valve2"]
+        # Stations folder
+        stations_folder = await irrigation_system.get_child([f"{self.ns_idx}:Stations"])
         
-        for valve_id in valve_ids:
+        # Stazioni
+        station_ids = ["Station1", "Station2", "Station3"]
+        
+        for station_id in station_ids:
             try:
-                valve_node = await irrigation_system.get_child([f"{self.ns_idx}:{valve_id}"])
+                station_node = await stations_folder.get_child([f"{self.ns_idx}:{station_id}"])
                 
-                # Status
-                is_irrigating = await valve_node.get_child([f"{self.ns_idx}:IsIrrigating"])
-                mode = await valve_node.get_child([f"{self.ns_idx}:Mode"])
-                remaining_time = await valve_node.get_child([f"{self.ns_idx}:RemainingTime"])
+                # StationInfo
+                station_info = await station_node.get_child([f"{self.ns_idx}:StationInfo"])
+                station_desc = await (await station_info.get_child([f"{self.ns_idx}:Description"])).read_value()
+                station_type = await (await station_info.get_child([f"{self.ns_idx}:StationType"])).read_value()
+                valve_count = await (await station_info.get_child([f"{self.ns_idx}:ValveCount"])).read_value()
                 
-                self.nodes[f"{valve_id}_irrigating"] = is_irrigating
-                self.nodes[f"{valve_id}_mode"] = mode
-                self.nodes[f"{valve_id}_remaining"] = remaining_time
+                # Salva info stazione
+                self.nodes[f"{station_id}_info"] = {
+                    "description": station_desc,
+                    "type": station_type,
+                    "valve_count": valve_count
+                }
                 
+                # Valvole della stazione
+                for valve_num in range(1, valve_count + 1):
+                    valve_id = f"Valve{valve_num}"
+                    full_valve_id = f"{station_id}_{valve_id}"
+                    
+                    try:
+                        valve_node = await station_node.get_child([f"{self.ns_idx}:{valve_id}"])
+                        
+                        # Description
+                        description = await (await valve_node.get_child([f"{self.ns_idx}:Description"])).read_value()
+                        
+                        # Status
+                        status_folder = await valve_node.get_child([f"{self.ns_idx}:Status"])
+                        is_irrigating = await status_folder.get_child([f"{self.ns_idx}:IsIrrigating"])
+                        mode = await status_folder.get_child([f"{self.ns_idx}:Mode"])
+                        remaining_time = await status_folder.get_child([f"{self.ns_idx}:RemainingTime"])
+                        
+                        self.nodes[f"{full_valve_id}_description"] = description
+                        self.nodes[f"{full_valve_id}_irrigating"] = is_irrigating
+                        self.nodes[f"{full_valve_id}_mode"] = mode
+                        self.nodes[f"{full_valve_id}_remaining"] = remaining_time
+                        
+                    except:
+                        pass  # Valvola non trovata
+                        
             except:
-                pass  # Valvola non trovata, salta
+                pass  # Stazione non trovata
                 
     async def read_system_status(self) -> Dict:
-        """Legge lo stato completo del sistema"""
+        """Legge lo stato completo del sistema professionale"""
         status = {}
         
         # Stato sistema
         system_on = await self.nodes["system_state"].read_value()
         status["system"] = {"on": system_on}
         
-        # Valvole raggruppate per stazione
-        status["stations"] = {
-            "Station1": {"valves": {}},
-            "Station2": {"valves": {}}, 
-            "Station3": {"valves": {}}
-        }
+        # Stazioni
+        status["stations"] = {}
         
-        # Leggi stato di ogni valvola
-        valve_mapping = {
-            "Station1_Valve1": ("Station1", "Valve1"),
-            "Station1_Valve2": ("Station1", "Valve2"),
-            "Station2_Valve1": ("Station2", "Valve1"),
-            "Station3_Valve1": ("Station3", "Valve1"),
-            "Station3_Valve2": ("Station3", "Valve2")
-        }
+        station_ids = ["Station1", "Station2", "Station3"]
         
-        for valve_id, (station_id, valve_name) in valve_mapping.items():
-            if f"{valve_id}_irrigating" in self.nodes:
-                try:
-                    is_irrigating = await self.nodes[f"{valve_id}_irrigating"].read_value()
-                    mode = await self.nodes[f"{valve_id}_mode"].read_value()
-                    remaining_time = await self.nodes[f"{valve_id}_remaining"].read_value()
+        for station_id in station_ids:
+            if f"{station_id}_info" in self.nodes:
+                station_info = self.nodes[f"{station_id}_info"]
+                
+                status["stations"][station_id] = {
+                    "description": station_info["description"],
+                    "type": station_info["type"], 
+                    "valve_count": station_info["valve_count"],
+                    "valves": {}
+                }
+                
+                # Valvole della stazione
+                for valve_num in range(1, station_info["valve_count"] + 1):
+                    valve_id = f"Valve{valve_num}"
+                    full_valve_id = f"{station_id}_{valve_id}"
                     
-                    status["stations"][station_id]["valves"][valve_name] = {
-                        "irrigating": is_irrigating,
-                        "mode": mode,
-                        "remaining_time": remaining_time
-                    }
-                except:
-                    pass
+                    if f"{full_valve_id}_irrigating" in self.nodes:
+                        try:
+                            description = await self.nodes[f"{full_valve_id}_description"].read_value()
+                            is_irrigating = await self.nodes[f"{full_valve_id}_irrigating"].read_value()
+                            mode = await self.nodes[f"{full_valve_id}_mode"].read_value()
+                            remaining_time = await self.nodes[f"{full_valve_id}_remaining"].read_value()
+                            
+                            status["stations"][station_id]["valves"][valve_id] = {
+                                "description": description,
+                                "irrigating": is_irrigating,
+                                "mode": mode,
+                                "remaining_time": remaining_time
+                            }
+                        except:
+                            pass
                     
         return status
         
     def format_status_display(self, status: Dict) -> str:
-        """Formatta lo stato per la visualizzazione"""
+        """Formatta lo stato per la visualizzazione professionale"""
         output = []
-        output.append("=" * 70)
-        output.append("           🌱 STATO SISTEMA DI IRRIGAZIONE 🌱")
-        output.append("=" * 70)
+        output.append("=" * 80)
+        output.append("        🌱 SISTEMA IRRIGAZIONE PROFESSIONALE - ObjectTypes 🌱")
+        output.append("=" * 80)
         
         # Stato sistema
         system_state = "🟢 ACCESO" if status["system"]["on"] else "🔴 SPENTO"
         output.append(f"🏠 Sistema: {system_state}")
         output.append("")
         
-        # Descrizioni stazioni
-        descriptions = {
-            "Station1": "Giardino Anteriore",
-            "Station2": "Aiuole Laterali", 
-            "Station3": "Giardino Posteriore"
-        }
+        # Architettura
+        output.append("🏗️  Architettura: IrrigationSystem → Controller + Stations → StationX → ValveY")
+        output.append("🔧 ObjectTypes: IrrigationSystemType, IrrigationStationType, IrrigationValveType")
+        output.append("")
         
         # Stato stazioni
         for station_id, station_data in status["stations"].items():
             if not station_data["valves"]:
                 continue
                 
-            description = descriptions.get(station_id, station_id)
-            valve_count = len(station_data["valves"])
-            station_type = "DoubleValve" if valve_count > 1 else "SingleValve"
+            output.append(f"📁 {station_id} - {station_data['description']}")
+            output.append(f"   Tipo: {station_data['type']} ({station_data['valve_count']} valvole)")
+            output.append("-" * 70)
             
-            output.append(f"📍 {station_id} - {description}")
-            output.append(f"   Tipo: {station_type} ({valve_count} valvole)")
-            output.append("-" * 60)
-            
-            for valve_name, valve_data in station_data["valves"].items():
+            for valve_id, valve_data in station_data["valves"].items():
                 # Icona e stato
                 if valve_data["irrigating"]:
                     icon = "💧"
@@ -169,8 +202,9 @@ class SimpleIrrigationMonitor:
                 
                 reset_color = "\033[0m"
                 
-                output.append(f"  {icon} {color}{valve_name}: {state}{reset_color}")
-                output.append(f"      Modalità: {valve_data['mode']}")
+                output.append(f"  {icon} {color}{valve_id}: {state}{reset_color}")
+                output.append(f"      📍 {valve_data['description']}")
+                output.append(f"      🔧 Modalità: {valve_data['mode']}")
                 
                 if valve_data["irrigating"]:
                     mins, secs = divmod(valve_data["remaining_time"], 60)
@@ -178,7 +212,7 @@ class SimpleIrrigationMonitor:
                         
                 output.append("")
                 
-        output.append("=" * 70)
+        output.append("=" * 80)
         return "\n".join(output)
         
     def clear_screen(self):
@@ -187,7 +221,8 @@ class SimpleIrrigationMonitor:
         
     async def monitor_continuous(self, interval: int = 2):
         """Monitoraggio continuo del sistema"""
-        print("🌱 Avvio monitoraggio sistema di irrigazione...")
+        print("🌱 Avvio monitoraggio sistema irrigazione professionale...")
+        print("   Struttura con ObjectTypes personalizzati")
         print("   Premi Ctrl+C per uscire")
         print("")
         input("Premi INVIO per iniziare...")
@@ -205,7 +240,10 @@ class SimpleIrrigationMonitor:
                 now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
                 print(f"🕐 Ultimo aggiornamento: {now}")
                 print(f"🔄 Prossimo aggiornamento tra {interval} secondi...")
-                print("\n💡 Suggerimento: Usa control_client.py per controllare l'irrigazione")
+                print("\n💡 Suggerimenti:")
+                print("   • Usa professional_control_client.py per controllare l'irrigazione")
+                print("   • Struttura: StationX_ValveY (es. Station1_Valve1)")
+                print("   • ObjectTypes visibili in UAModeler sotto Types → ObjectTypes")
                 
                 await asyncio.sleep(interval)
                 
@@ -214,7 +252,7 @@ class SimpleIrrigationMonitor:
             
     async def monitor_once(self):
         """Mostra lo stato una sola volta"""
-        print("📊 Lettura stato sistema di irrigazione...")
+        print("📊 Lettura stato sistema irrigazione professionale...")
         status = await self.read_system_status()
         display = self.format_status_display(status)
         print(display)
@@ -230,10 +268,10 @@ class SimpleIrrigationMonitor:
 def print_help():
     """Mostra l'help del programma"""
     print("""
-🌱 Simple Monitor Client - Sistema di Irrigazione OPC-UA
+🌱 Professional Monitor Client - Sistema di Irrigazione OPC-UA con ObjectTypes
 
 UTILIZZO:
-    python monitor_client.py [OPZIONI]
+    python professional_monitor_client.py [OPZIONI]
 
 OPZIONI:
     -h, --help          Mostra questo messaggio di aiuto
@@ -242,14 +280,26 @@ OPZIONI:
     -i INTERVAL         Intervallo di aggiornamento in secondi (default: 2)
     -u URL              URL del server OPC-UA (default: opc.tcp://localhost:48400/irrigation)
 
+STRUTTURA PROFESSIONALE:
+    IrrigationSystem/
+    ├── Controller/
+    │   └── SystemState
+    └── Stations/
+        ├── Station1/ (IrrigationStationType)
+        │   ├── StationInfo/
+        │   ├── Valve1/ (IrrigationValveType)
+        │   └── Valve2/ (IrrigationValveType)
+        ├── Station2/ (IrrigationStationType)
+        └── Station3/ (IrrigationStationType)
+
 ESEMPI:
-    python monitor_client.py                     # Monitoraggio continuo
-    python monitor_client.py -s                  # Lettura singola
-    python monitor_client.py -c -i 5             # Monitoraggio ogni 5 secondi
+    python professional_monitor_client.py                     # Monitoraggio continuo
+    python professional_monitor_client.py -s                  # Lettura singola
+    python professional_monitor_client.py -c -i 5             # Monitoraggio ogni 5 secondi
 
 CONTROLLI:
     - Ctrl+C: Esce dal monitoraggio continuo
-    - Durante il monitoraggio continuo, usa control_client.py in un altro terminale
+    - Durante il monitoraggio, usa professional_control_client.py in un altro terminale
     """)
 
 async def main():
@@ -286,10 +336,10 @@ async def main():
             print("❌ Errore: Intervallo non valido dopo -i")
             return
     
-    monitor = SimpleIrrigationMonitor(server_url)
+    monitor = ProfessionalIrrigationMonitor(server_url)
     
     try:
-        print("🔌 Connessione al server OPC-UA...")
+        print("🔌 Connessione al server OPC-UA professionale...")
         await monitor.connect()
         
         if single_mode:
@@ -299,7 +349,7 @@ async def main():
             
     except ConnectionError:
         print("❌ Impossibile connettersi al server OPC-UA")
-        print("💡 Assicurati che il server sia in esecuzione con: python server/irrigation_server_simple.py")
+        print("💡 Assicurati che il server sia in esecuzione con: python professional_irrigation_server.py")
     except Exception as e:
         print(f"❌ Errore: {e}")
     finally:
