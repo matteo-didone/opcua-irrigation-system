@@ -1,0 +1,15 @@
+# Dipendenze per il Sistema di Irrigazione OPC-UA
+# Installa con: pip install -r requirements.txt
+
+# Libreria principale OPC-UA per Python
+asyncua>=1.0.0
+
+# Librerie per gestione date e asincrono (incluse in Python 3.7+)
+# asyncio - inclusa in Python standard library
+# datetime - inclusa in Python standard library
+# typing - inclusa in Python standard library
+
+# Per sviluppo e debug (opzionali)
+# ipython>=8.0.0
+# pytest>=7.0.0
+# black>=22.0.0
