@@ -205,7 +205,7 @@ class SimpleIrrigationMonitor:
                 now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
                 print(f"🕐 Ultimo aggiornamento: {now}")
                 print(f"🔄 Prossimo aggiornamento tra {interval} secondi...")
-                print("\n💡 Suggerimento: Usa simple_control_client.py per controllare l'irrigazione")
+                print("\n💡 Suggerimento: Usa control_client.py per controllare l'irrigazione")
                 
                 await asyncio.sleep(interval)
                 
@@ -233,7 +233,7 @@ def print_help():
 🌱 Simple Monitor Client - Sistema di Irrigazione OPC-UA
 
 UTILIZZO:
-    python simple_monitor_client.py [OPZIONI]
+    python monitor_client.py [OPZIONI]
 
 OPZIONI:
     -h, --help          Mostra questo messaggio di aiuto
@@ -243,13 +243,13 @@ OPZIONI:
     -u URL              URL del server OPC-UA (default: opc.tcp://localhost:48400/irrigation)
 
 ESEMPI:
-    python simple_monitor_client.py                     # Monitoraggio continuo
-    python simple_monitor_client.py -s                  # Lettura singola
-    python simple_monitor_client.py -c -i 5             # Monitoraggio ogni 5 secondi
+    python monitor_client.py                     # Monitoraggio continuo
+    python monitor_client.py -s                  # Lettura singola
+    python monitor_client.py -c -i 5             # Monitoraggio ogni 5 secondi
 
 CONTROLLI:
     - Ctrl+C: Esce dal monitoraggio continuo
-    - Durante il monitoraggio continuo, usa simple_control_client.py in un altro terminale
+    - Durante il monitoraggio continuo, usa control_client.py in un altro terminale
     """)
 
 async def main():
